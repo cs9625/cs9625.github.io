@@ -1,5 +1,7 @@
 ---
-title: "Welcome to Jekyll!"
-date: 2022-02-16 08:26:28 -0400
-categories: jekyll update
+title: " RFP 검토"
+date: 2022-02-15 23:26:28 -0400
+categories: 업무
 ---
+
+식의약 데이터 융합·분석 플랫폼 구축(1차)
