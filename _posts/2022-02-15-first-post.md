@@ -1,7 +1,7 @@
 ---
 title: "R 서버 설치"
 date: 2022-02-15 21:00:00 
-categories: cs9625 update
+categories: 업무
 ---
 어떻게 쓰는 거지??
 
