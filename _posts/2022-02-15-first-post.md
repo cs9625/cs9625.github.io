@@ -1,5 +1,5 @@
 ---
-title: "R 서버 설치"
+title: "Post1"
 date: 2022-02-15 
 categories: aaa
 ---
