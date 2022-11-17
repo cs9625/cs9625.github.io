@@ -114,17 +114,17 @@
     <div class='medium-8 columns'>
       <div class='form'>
         <div class='row'>
-          <form id='contact_form' method='POST'>
+          <form action="https://formspree.io/f/xpznpnjj" method='POST'>
             <div class='large-12 columns'>
               <p id='thanks' style='display: none;'>
                 Thanks for contacting us, we'll be in touch soon!
               </p>
             </div>
             <div class='medium-12 columns'>
-              <input class='required' name='name' placeholder='NAME' type='text'>
-              <input class='required email' name='email' placeholder='EMAIL' type='text'>
-              <input class='required' name='subject' placeholder='SUBJECT' type='text'>
-              <textarea class='required' name='message' placeholder='MESSAGE'></textarea>
+              <input class='form-control' name='name' id="name" placeholder='NAME' type='text'>
+              <input class='form-control' name='email' id="email" placeholder='EMAIL' type='email'>
+              <input class='form-control' name='subject' id="subject" placeholder='SUBJECT' type='text'>
+              <textarea class='form-control' name='message' id="message" placeholder='MESSAGE'></textarea>
               <input class='button white' type='submit'>
             </div>
           </form>
