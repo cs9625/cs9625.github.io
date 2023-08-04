@@ -1,0 +1,909 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CodeWorks</title>
+    <description>Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description.
+</description>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Thu, 17 Nov 2022 12:35:44 +0900</pubDate>
+    <lastBuildDate>Thu, 17 Nov 2022 12:35:44 +0900</lastBuildDate>
+    <generator>Jekyll v4.3.1</generator>
+    
+      <item>
+        <title>NVIDIA Jetson Nano Developer Kit</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;본 블로그는 SEOUL G-캠프의 jetson nano 유튜브 강의 내용을  기반으로 작성함. &lt;br /&gt;
+&lt;a href=&quot;https://www.youtube.com/playlist?list=PLieE0qnqO2kQufTeWH2e3R1JXKV1d3zmS&quot;&gt;유튜브 강의 바로가기&lt;/a&gt;    &lt;br /&gt;
+&lt;a href=&quot;https://github.com/jugfk&quot;&gt;관련자료 Github 링크&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;1-jetson-nano&quot;&gt;1. Jetson Nano&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;암A57 쿼드코어와 128개 맥스웰 GPU 코어가 함께 내장되어 있다.
+  &lt;img src=&quot;/images/blogs/embedded/jetson-01.JPG&quot; width=&quot;40%&quot; height=&quot;30%&quot; title=&quot;px(픽셀) 크기 설정&quot; alt=&quot;jetson&quot; /&gt;&amp;lt;/img&amp;gt;
+  &lt;img src=&quot;/images/blogs/embedded/jetson-01.JPG&quot; alt=&quot;Jetson Nano&quot; width=&quot;50%&quot; height=&quot;50%&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;소형 SO-DIMM(Dual-In-Memory Module) 폼팩터로 제공&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Jetson Nano Dev Kit vs Rasberry Pi 3B+
+  &lt;img src=&quot;/images/blogs/embedded/jetson-02.JPG&quot; alt=&quot;사양비교&quot; /&gt;
+  &lt;img src=&quot;/images/blogs/embedded/jetson-03.JPG&quot; alt=&quot;성능비교&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;jetson-nano-냉각-팬-제어&quot;&gt;Jetson Nano 냉각 팬 제어&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;수동방식
+    &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;numpy&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; jetson_clocks
+
+ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; sh &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;echo 255 &amp;gt; /sys/devices/pwm-fan/target_pwm&apos;&lt;/span&gt;
+ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; sh &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;echo 127 &amp;gt; /sys/devices/pwm-fan/target_pwm&apos;&lt;/span&gt;
+ &lt;span class=&quot;nv&quot;&gt;$sudo&lt;/span&gt; sh &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&apos;echo 0 &amp;gt; /sys/devices/pwm-fan/target_pwm&apos;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;자동방식 (부팅시에 자동으로 동작)
+    &lt;ul&gt;
+      &lt;li&gt;파이썬 모듈 설치
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  $sudo apt update
+  $sudo apt install -y python3-dev
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;설치 드라이버 다운로드
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  $git clone https://github.com/jugfk/jetson-fan-ctl.git
+  $cd jetson-fan-ctl/
+  $-sudo sh install.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Adjust the fan speed:
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  $sudo vi /etc/automagic-fan/config.json
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Check the fan status:
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  $sudo service automagic-fan status
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;jetson-nano-스왑-설정&quot;&gt;Jetson Nano 스왑 설정&lt;/h3&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-- swap 활성화 여부 확인
+$free -m
+
+-- swapon 명령으로 스왑 상태를 표시(ZRAM에 의한 것인지 여부 확인)
+$swapon -s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;ZRAM 이란?&lt;/p&gt;
+  &lt;ul&gt;
+    &lt;li&gt;일종의 swap 이지만 Disk I/O 를 일으키지 않고 일정 조건에 의해서 swap 할 메모리를 우선 압축하도록 하는 기능&lt;/li&gt;
+    &lt;li&gt;메모리상에 존재하는 데이터들은 상당히 압축률이 높은 특성을 갖는다는 전재를 깔고 도입되는 사항이며&lt;/li&gt;
+    &lt;li&gt;압축 알고리즘은 빠르다고 알려진 LZO (zip 에서 사용하는) 등을 많이 사용.&lt;/li&gt;
+    &lt;li&gt;생각보다 메모리를 많이 아낄 수 있고 성능손실이 크지 않다고 알려져 있어서 대부분의 임베디드 시스템에는 (특히 NAS, 안드로이드) 많이 도입되는 기능&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;SWAP 설정 방법&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;전용 파티션을 만들고 파티션 전체를 스왑으로 사용하는 방법 (절차 복잡)&lt;/li&gt;
+  &lt;li&gt;파일로 스왑을 만드는 방법 (쉽게 만들 수 있음)
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; -- swap 파일 생성
+ $sudo dd if=/dev/zero of=/var/swapfile bs=1G count=4
+
+ -- /var/swapfile을 스왑파일로 사용하기 위해 초기화
+ $sudo mkswap /var/swapfile
+
+ -- root 사용자만 액세스 활 수 있도록 파일 권한 변경(변경하지 않으면 스왑파일을 마운트 할 때 경고가 표시됨)
+ $sudo chmod 600 /var/swapfile
+
+ -- Jetson Nano 시작할 때 자동으로 스왑을 마운트하도록 /etc/fstab 파일에 아래 내용 추가
+ $sudo vi /etc/fstab
+ --&amp;gt; /var/swapfile  none    swap    swap    0   0
+
+ -- 즉시 스왑 파일을 활성화 하려면 다음과 같이 &quot;swapon&quot; 명령 실행
+ $sudo swapon /var/swapfile
+
+ -- free 명령으로 스왑이 확장 된 것을 확인
+ $free -m
+
+ -- swapon 명령으로 스왑 상태 표시
+ $swapon -s
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;jetson-파워모드-전환&quot;&gt;Jetson 파워모드 전환&lt;/h3&gt;
+
+&lt;p&gt;Jetson Nano에는 전원 관리 IC가 탑재되어 있으며, 소비 전력을 최적화 하면서 성능수행을 조정하는 등 고급 전원 관리 시스템을 구현하고 있음. 초기 상태에서 &lt;strong&gt;5W&lt;/strong&gt;(저전력)과 &lt;strong&gt;MAXN&lt;/strong&gt;(최대성능 발휘) 두개의 파워 모드가 설정되어 있으며 쉽게 전환 사용할 수 있다. 기본 파워 모드는 MAXN로 성정되어 있음.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;제공 기능 &lt;br /&gt;
+  CPU 코어의 인에이블/디스에이블 &lt;br /&gt;
+  CPU의 동작 주파수 &lt;br /&gt;
+  GPU TPC의 인에이블/디스에이블 &lt;br /&gt;
+  GPU의 동작 주파수 &lt;br /&gt;
+  (EMC)의 동작 주파수 메모리&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;각 파워 모드의 설정&lt;/p&gt;
+
+    &lt;table&gt;
+      &lt;thead&gt;
+        &lt;tr&gt;
+          &lt;th&gt;모드 이름&lt;/th&gt;
+          &lt;th&gt;MAXN&lt;/th&gt;
+          &lt;th&gt;5W&lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;td&gt;소비전력&lt;/td&gt;
+          &lt;td&gt;10W&lt;/td&gt;
+          &lt;td&gt;5W&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;모드ID&lt;/td&gt;
+          &lt;td&gt;0&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;온라인 CPU 코어수&lt;/td&gt;
+          &lt;td&gt;4&lt;/td&gt;
+          &lt;td&gt;2&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;CPU 최대 주파수&lt;/td&gt;
+          &lt;td&gt;1479&lt;/td&gt;
+          &lt;td&gt;918&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;GPU TPC&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+          &lt;td&gt;1&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;GPU 최대 주파수(MHz)&lt;/td&gt;
+          &lt;td&gt;921.6&lt;/td&gt;
+          &lt;td&gt;640&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+          &lt;td&gt;메모리 최대 주파수(MHz)&lt;/td&gt;
+          &lt;td&gt;1600&lt;/td&gt;
+          &lt;td&gt;1600&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;GUI 이용 전환 &lt;br /&gt;
+ &lt;img src=&quot;/images/blogs/embedded/jetson-04.JPG&quot; alt=&quot;파워모드 전환&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;tegrastats 명령 실행 (드롭다운 메뉴에서 “Run tegrastats”)
+    &lt;ul&gt;
+      &lt;li&gt;cpu와 gpu의 성능 지수 확인&lt;/li&gt;
+      &lt;li&gt;jetson nano의 소비 전력이 증가하고 전압이 저하되면 ‘System is now being throttled.”라는 알림 표시됨.
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ tegrastats (1초 마다 로그 출력)
+ $ tegrastats --interval 5000 (5초 마다 로그 출력)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;nvpmodel 명령
+    &lt;ul&gt;
+      &lt;li&gt;파워 모드를 MAXN로 변경
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  $sudo nvpmodel -m 0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;파워 모드를 5W로 변경
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  $sudo nvpmodel -m 1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;현재 파워 모드 확인
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  $sudo nvpmodel -q
+  $sudo nvpmodel -q --verbos (자세한 설명 표시)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;jetson-nano에-tensorflow-설치&quot;&gt;Jetson Nano에 Tensorflow 설치&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;파이썬 기본 버전 변경 &lt;br /&gt;
+ – 파이썬 설치 확인
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python &lt;span class=&quot;nt&quot;&gt;-V&lt;/span&gt;
+ Python 2.7.17
+
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;which python
+ /usr/bin/python
+
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-al&lt;/span&gt; /usr/bin/python
+ lrwxrwxrwx 1 root root 9 Apr 16  2018 /usr/bin/python -&amp;gt; python2.7
+
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; /usr/bin/ | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;python
+ aarch64-linux-gnu-python3.6-config
+ aarch64-linux-gnu-python3.6m-config
+ aarch64-linux-gnu-python3-config
+ aarch64-linux-gnu-python3m-config
+ dh_python2
+ dh_python3
+ python
+ python2
+ python2.7
+ python3
+ python3.6
+ ...
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;– Update-alternatives로 파이썬 버전 등록 및 변경&lt;/p&gt;
+    &lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; 이미 등록된 것이 있는 지 확인
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;update-alternatives &lt;span class=&quot;nt&quot;&gt;--config&lt;/span&gt; python
+ update-alternatives: error: no alternatives &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;python
+
+ &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; update-alternatives에 등록
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;update-alternatives &lt;span class=&quot;nt&quot;&gt;--install&lt;/span&gt; /usr/bin/python python /usr/bin/python2.7 1
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;update-alternatives &lt;span class=&quot;nt&quot;&gt;--install&lt;/span&gt; /usr/bin/python python /usr/bin/python3.6 2
+
+ &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; 파이썬 버전 선택
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;update-alternatives &lt;span class=&quot;nt&quot;&gt;--config&lt;/span&gt; python
+ There are 2 choices &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;the alternative python &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;providing /usr/bin/python&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+
+ Selection    Path                Priority   Status
+ &lt;span class=&quot;nt&quot;&gt;------------------------------------------------------------&lt;/span&gt;
+ &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; 0            /usr/bin/python3.6   2         auto mode
+ 1            /usr/bin/python2.7   1         manual mode
+ 2            /usr/bin/python3.6   2         manual mode
+
+ Press &amp;lt;enter&amp;gt; to keep the current choice[&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;, or &lt;span class=&quot;nb&quot;&gt;type &lt;/span&gt;selection number: 2
+
+ &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; 파이썬 버전 확인
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python &lt;span class=&quot;nt&quot;&gt;--version&lt;/span&gt;
+ Python 3.6.9
+
+ &lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-al&lt;/span&gt; /usr/bin/python
+ lrwxrwxrwx 1 root root 24 Sep 24 04:02 /usr/bin/python -&amp;gt; /etc/alternatives/python
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;참고&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Alternatives는 파이썬 뿐 아니라 Java 등의 모든 프로그램의 버전을 관리하는 데 사용할 수 있음.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;우분투 패키지 업그레이드&lt;/p&gt;
+
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; -- 설치 가능한 리스트를 업데이트
+ $ sudo apt-get update
+
+ -- apt-get update로 가져온 각 패키지들의 최신 버전에 맞게 업그레이드
+ $ sudo apt-get upgrade
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;pip 설치
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ sudo apt-get install python-pip
+ $ sudo apt-get install python3-pip
+ $ python -m pip install --upgrade pip
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+
+    &lt;p&gt;pip3를 pip로 변경하기&lt;/p&gt;
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; vi ~/.bashrc
+
+ -- 아래 라인 추가
+ alias pip = &quot;pip3&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;jtop 설치 (시스템 모니터링)
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ sudo -H pip install -U jetson-stats
+
+ if don&apos;t have pip
+ ($ sudo apt install python-pip)
+
+ $ sudo reboot
+
+ -- jetson-stats 실행
+ $ jtop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Tensorflow 설치&lt;/p&gt;
+
+    &lt;p&gt;참조 : &lt;a href=&quot;https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html&quot;&gt;https://docs.nvidia.com/deeplearning/frameworks/install-tf-jetson-platform/index.html&lt;/a&gt;&lt;/p&gt;
+
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v46 tensorflow==2.6.0+nv21.11
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;가상환경 설치
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo apt-get install python3-venv
+$ python -m venv venv --system-site-packages
+$ source venv/bin/activate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;온도-모니터하기&quot;&gt;온도 모니터하기&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;온도센서 정보
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ cat /sys/devices/virtual/thermal/thermal_zone*/type
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;온도표시
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ cat /sys/devices/virtual/thermal/thermal_zone*/temp
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;파이썬 온도센서 그래프 표시
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ sudo apt install libfreetype6-dev
+ $ sudo pip3 install numpy
+ $ sudo pip3 install matplotlib
+ $ git clone https://github.com/jetsonworld/jetson-thermal-monitor.git
+ $ cd jetson-thermal-monitor
+ $ python3 jetson_temp_monitor.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;자바스크립트 온도그래프 만들기
+    &lt;ul&gt;
+      &lt;li&gt;Node.js, npm, node-red 이용&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo apt update
+$ sudo apt install nodejs
+$ sudo apt install npm
+$ sudo npm install -g --unsafe-perm node-red (오류 시 npm 최신으로 업데이트 )
+     -- npm cache clean --force
+     -- npm install -g n
+     -- sudo n stable
+$ node -v
+$ npm -v
+$ node-red (Ctrl + C)
+
+$ cd .node-red
+$ npm install node-red-dashboard
+$ wget https://raw.githubusercontent.com/jetsonworld/javascript-thermal-monitor/master/flows.json
+$ node-red 
+
+-- http://127.0.0.1:1880/ 접속
+-- flows.json 파일 import 하여 배포 후 확인
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;헤드리스화-하기&quot;&gt;헤드리스화 하기&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;GUI를 실행하지 않도록 하여 가용 메모리 크리 늘리거나 CPU 부하 낮춤.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;GUI 자동 시작 정지
+    &lt;ul&gt;
+      &lt;li&gt;모드 확인
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ free -m
+ $ sudo apt install screenfetch
+ $ systemctl get-default
+ graphical.target
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;CLI 모드로 변경
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ systemctl set-default multi-user.target
+ $ sudo reboot
+ $ free -m (메모리 사용량 비교)
+ # CLI 모드에서도 아래 명령을 통해 Graphic 환경 이용 가능   
+ $ startx 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;다시 GUI 모드로 변경
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ sudo systemctl set-default graphical.target
+ $ sudo reboot
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CLI 환경에서 WIFI 연결하기
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ nmcli connection show
+ $ nmcli device wifi list
+ $ sudo nmcli device wifi connect Hub-name password xxxxxxxxx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;microUSB로 연결하기
+    &lt;ul&gt;
+      &lt;li&gt;AC 어댑터 사용 시 microUSB 포트 PC의 USB 포트에 연결하여 PC에서 Jetson Nano 엑세스 가능 (어댑터 연결 시 J48 쇼트시켜야 함).&lt;/li&gt;
+      &lt;li&gt;연결하면 자동으로 장치 드라이버가 설치되어 네트워크가 설정됨.&lt;/li&gt;
+      &lt;li&gt;네트워크가 설정되면 Jetson Nano가 DHCP 서버가 되고, PC에 IP 주소가 할담 됨.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;원격 데스크톱 제어
+    &lt;ul&gt;
+      &lt;li&gt;realVNC 이용 (https://www.realvnc.com/en/connect/download/viewer/)&lt;/li&gt;
+      &lt;li&gt;vino-server 구동 (실패…)
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; $ gsettings set org.gnome.Vino require-encryption false
+ $ /usr/lib/vino/vino-server
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;도커-컨테이너-사용하기&quot;&gt;도커 컨테이너 사용하기&lt;/h3&gt;
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;도커 기반 기술&lt;/p&gt;
+
+    &lt;ul&gt;
+      &lt;li&gt;리눅스 커널에서 제공하는 컨테이너 기술 이용&lt;/li&gt;
+      &lt;li&gt;리눅스 커널의 cgroups와 namespaces 기술 이용&lt;/li&gt;
+      &lt;li&gt;컨테이너는 가상화가 아닌 격리 기술&lt;/li&gt;
+      &lt;li&gt;Jetson Nano에 디폴트로 설치되어 있음.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;도커 컨테이너 기본 조작&lt;/p&gt;
+    &lt;ul&gt;
+      &lt;li&gt;도커 버전 확인
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo docker version
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;NVIDIA 컨테이너 런타임 확인
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo docker info | grep nvidia
+$ sudo dpkg --get-selections | grep nvidia
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Hello Word 실습
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo docker run hello-world
+$ sudo docker images
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Node-RED를 도커 컨테이너에 설치하기
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ sudo docker run -it -p 1880:1880 --name mynodered nodered/node-red    
+-- 브라우저 접속 후 확인
+http://127.0.0.1:1880/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;NGINX Web Server 실행
+        &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mkdir example
+$ cd example
+$ wget https://raw.githubusercontent.com/jugfk/startDockerContainer/master/Dockerfile
+$ sudo docker build --tag hello:0.1 .
+$ sudo docker run --name hello-nginx -d -p 80:80 -v /root/data:/data hello:0.1
+$ sudo docker ps
+$ sudo docker images
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;도커 명령어&lt;/li&gt;
+    &lt;/ul&gt;
+
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# List containers   
+$ sudo docker ps   
+$ sudo docker ps -a  
+
+# List port mappings or a specific mapping for the container   
+$ sudo docker port mynodered   
+
+# List the most recently created images   
+$ sudo docker images   
+
+# Get real time events from the server   
+$ sudo docker events   
+
+# Display system-wide information   
+$ sudo docker info   
+
+# Docker STATS   
+$ sudo docker stats   
+
+# restart container
+$ sudo docker start [컨테이너 name]
+$ sudo docker stop [컨테이너 name]
+
+# Remove one or more containers   
+$ sudo docker rm [컨테이너ID]
+$ sudo docker rm `docker ps -a -q` (모두삭제)
+
+# Remove one or more images   
+$ sudo docker rmi [이미지ID]
+$ sudo docker rmi -f [이미지ID] (컨테이너가 있어 삭제 안될경우 컨테이너까지 삭제)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+    &lt;p&gt;&lt;img src=&quot;/images/blogs/embedded/jetson-05.JPG&quot; alt=&quot;도커 명령어&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;파워-리셋-와이파이-그리고-블루투스-설치&quot;&gt;파워, 리셋, 와이파이, 그리고 블루투스 설치&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Jetson Nano의 전원을 ON/OFF 하는 방법
+    &lt;ul&gt;
+      &lt;li&gt;microUSB 전원 케이블을 사용&lt;/li&gt;
+      &lt;li&gt;J40 헤더 전원 스위치 연결 &lt;br /&gt;
+  &lt;img src=&quot;/images/blogs/embedded/jetson-06.JPG&quot; alt=&quot;전원스위치1&quot; /&gt;
+  &lt;img src=&quot;/images/blogs/embedded/jetson-07.JPG&quot; alt=&quot;전원스위치2&quot; /&gt;&lt;/li&gt;
+      &lt;li&gt;리셋 스위치 &lt;br /&gt;
+  &lt;img src=&quot;/images/blogs/embedded/jetson-08.JPG&quot; alt=&quot;리셋 스위치&quot; /&gt;&lt;/li&gt;
+      &lt;li&gt;전원버튼과 리셋버튼의 전체 회로도
+  &lt;img src=&quot;/images/blogs/embedded/jetson-09.JPG&quot; alt=&quot;회로도&quot; /&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;와이파이와 블루투스
+&lt;img src=&quot;/images/blogs/embedded/jetson-10.JPG&quot; alt=&quot;호환모델&quot; /&gt;
+위의 두 모델 Jetson Nano와 호환 확인 됨.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;gpio-general-purpose-inputoutput&quot;&gt;GPIO (General-Purpose Input/Output)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Jetson Nano에는 40핀 확장 헤더(J41)가 준비되어 있음.
+   &lt;img src=&quot;/images/blogs/embedded/jetson-11.JPG&quot; alt=&quot;확장헤더사양&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;180도 회전
+   &lt;img src=&quot;/images/blogs/embedded/jetson-12.JPG&quot; alt=&quot;확장헤더사양&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;GPIO 샘플 파이썬 코드 다운로드
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   $ git clone https://github.com/NVIDIA/jetson-gpio.git
+   $ cd jetson-gpio
+   $ sudo python3 setup.py install
+   $ sudo groupadd -f -r gpio
+   $ sudo user mod -a -G gpio username
+   $ cd samples
+   $ python3 샘플코드.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;딥러닝-골격-검출-프로그램&quot;&gt;딥러닝 골격 검출 프로그램&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;USB 웹카메라 연결&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/jugfk/tf-pose-estimation&quot;&gt;골격 감지 응용 프로그램 링크&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ros&quot;&gt;ROS&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;오픈소스&lt;/li&gt;
+  &lt;li&gt;meta-operating system for robot.&lt;/li&gt;
+  &lt;li&gt;로봇응용 프로그램 개발을 위한 운영체제와 같은 로봇 플랫폼.&lt;/li&gt;
+  &lt;li&gt;하드웨어 추상화, 하위 디바이스 제어, 일반적으로 사용되는 기능의 구현, 프로세스간의 메시지 패싱, 패키지 관리, 개발환경에 필요한 라이브러리와 다양한 개발 및 디버깅 도구를 제공
+&lt;img src=&quot;/images/blogs/embedded/jetson-13.JPG&quot; alt=&quot;ROS&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;설치 및 구동 &lt;br /&gt;
+  &lt;a href=&quot;https://github.com/jugfk/installROS&quot;&gt;https://github.com/jugfk/installROS&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;레퍼런스 &lt;br /&gt;
+  &lt;a href=&quot;https://www.stereolabs.com/blog/ros-and-nvidia-jetson-nano&quot;&gt;Getting Started with ROS on Jetson Nano&lt;/a&gt; &lt;br /&gt;
+  &lt;a href=&quot;https://cafe.naver.com/openrt/2360&quot;&gt;로보티즈 표박사님 네이버 카페&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;yolo-you-only-look-once&quot;&gt;YOLO (You Only Look Once)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;물체 검출 알고리즘(Object Detection)&lt;/li&gt;
+  &lt;li&gt;핵심 아이디어 : 객체 탐지를 단일 회귀 문제로 다시 구성하는 것&lt;/li&gt;
+  &lt;li&gt;YOLO는 네트워크의 최종 출력단에서 경계박스를 위치 찾기와 클래스 분류가 동시에 이뤄진다. 단 하나의 네트워크가 한번에 특징도 추출하고, 경계박스도 만들고, 클래스도 분류한다. 그러므로 간단하고 빠르다.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;설치
+  &lt;a href=&quot;https://github.com/jugfk/BuildOpenCV&quot;&gt;Jetson Nano에서 OpenCV 4.1.1 하기&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;레퍼런스 &lt;br /&gt;
+  &lt;a href=&quot;https://blog.naver.com/PostView.nhn?isHttpsRedirect=true&amp;amp;blogId=sogangori&amp;amp;logNo=220993971883&amp;amp;parentCategoryNo=6&amp;amp;categoryNo=&amp;amp;viewDate=&amp;amp;isShowPopularPosts=true&amp;amp;from=search&quot;&gt;You Only Look Once : Unified, Real-Time Object Detection
+&lt;/a&gt; &lt;br /&gt;
+  &lt;a href=&quot;https://github.com/leehaesung/YOLO-Powered_Robot_Vision&quot;&gt;2017년5월13일 라즈베리파이2에 YOLO2 구현&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;관련논문 &lt;br /&gt;
+  &lt;a href=&quot;http://arxiv.org/abs/1506.02640&quot;&gt;YOLO1(2016)&lt;/a&gt; &lt;br /&gt;
+  &lt;a href=&quot;https://arxiv.org/abs/1612.08242&quot;&gt;YOLO2(2017)&lt;/a&gt; &lt;br /&gt;
+  &lt;a href=&quot;https://arxiv.org/abs/1804.02767&quot;&gt;YOLO3(2019)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;mqttmessage-queuing-telemetry-transport&quot;&gt;MQTT(Message Queuing Telemetry Transport)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;ISO 표준 발행-구독 기반의 메시징 프로토콜&lt;/li&gt;
+  &lt;li&gt;TCP/IP 프로토콜 위에서 동작&lt;/li&gt;
+  &lt;li&gt;M2M, IOT를 위한 통신 프로토콜&lt;/li&gt;
+  &lt;li&gt;최소한의 전력과 패킷량으로 통신&lt;/li&gt;
+  &lt;li&gt;IOT와 모바일 어플리케이션 등의 통신에 적합&lt;/li&gt;
+  &lt;li&gt;HTTP, TCP등의 통신과 같이 클라이언트-서버 구조로 이루어지는 것이 아닌, 브로커(Broker), 발행자(Publisher), 구독자(Subscriber) 구조로 이루어짐
+&lt;img src=&quot;/images/blogs/embedded/jetson-14.JPG&quot; alt=&quot;MQTT&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;응용사례 &lt;br /&gt;
+  &lt;img src=&quot;/images/blogs/embedded/jetson-15.JPG&quot; alt=&quot;MQTT&quot; /&gt;&lt;/li&gt;
+  &lt;li&gt;MQTT 브로커
+    &lt;ul&gt;
+      &lt;li&gt;Mosquitto (&lt;a href=&quot;https://mosquitto.org&quot;&gt;https://mosquitto.org&lt;/a&gt;) - 무료&lt;/li&gt;
+      &lt;li&gt;HiveMQ (&lt;a href=&quot;https://www.hivemq.com&quot;&gt;https://www.hivemq.com&lt;/a&gt;)&lt;/li&gt;
+      &lt;li&gt;mosca (&lt;a href=&quot;http://www.mosca.io&quot;&gt;http://www.mosca.io&lt;/a&gt;)&lt;/li&gt;
+      &lt;li&gt;ActiveMQ (&lt;a href=&quot;https://activemq.apache.org&quot;&gt;https://activemq.apache.org&lt;/a&gt;)&lt;/li&gt;
+      &lt;li&gt;RabbitMQ (&lt;a href=&quot;https://www.rabbitmq.com&quot;&gt;https://www.rabbitmq.com&lt;/a&gt;)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;실습&lt;/p&gt;
+
+    &lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  - Setting up MQTT v3.1:
+  $ sudo apt-get update
+  $ sudo apt-get install -y mosquitto mosquitto-clients
+  $ sudo pip install paho-mqtt
+
+  - Stop &amp;amp; Start mosquitto broker:
+  $ sudo /etc/init.d/mosquitto stop
+  $ sudo /etc/init.d/mosquitto start
+
+  - Check the mosqutto condition:
+  $ sudo netstat -nap | grep mosquitto
+
+  - Testing MQTT:
+  $ mosquitto
+  $ mosquitto_sub -v -t &apos;topic/test&apos;
+  $ mosquitto_pub -t &apos;topic/test&apos; -m &apos;helloWorld&apos;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;node-red&quot;&gt;node-red&lt;/h3&gt;
+&lt;p&gt;&lt;a href=&quot;https://nodered.org/docs/getting-started/&quot;&gt;Getting Started&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;opencv-open-source-computer-vision&quot;&gt;OpenCV (Open Source Computer Vision)&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;실시간 이미지 프로세싱에 중점을 둔 라이브러리&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;===================================================================================
+How To Install OpneCV 4.4.0 on Jetson Nano:
+===================================================================================
+- OpenCV 4.4.0
+1. Download the instruction script:
+wget https://raw.githubusercontent.com/jetsonworld/BuildOpenCV/master/18_How_To_Install_OpenCV_On_Jetson_Nano.txt
+cat 18_How_To_Install_OpenCV_On_Jetson_Nano.txt
+
+1. Updating the packages:
+sudo apt update
+sudo apt install -y build-essential cmake git libgtk2.0-dev pkg-config  libswscale-dev libtbb2 libtbb-dev
+sudo apt install -y python-dev python3-dev python-numpy python3-numpy
+sudo apt install -y curl
+
+2. Install video &amp;amp; image formats:
+sudo apt install -y  libjpeg-dev libpng-dev libtiff-dev 
+sudo apt install -y libavcodec-dev libavformat-dev
+sudo apt install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+sudo apt install -y libv4l-dev v4l-utils qv4l2 v4l2ucp libdc1394-22-dev
+
+
+3. Download OpenCV &amp;amp; Contribs Modules:
+curl -L https://github.com/opencv/opencv/archive/4.4.0.zip -o opencv-4.4.0.zip
+curl -L https://github.com/opencv/opencv_contrib/archive/4.4.0.zip -o opencv_contrib-4.4.0.zip
+
+4. Unzipping packages:
+unzip opencv-4.4.0.zip 
+unzip opencv_contrib-4.4.0.zip 
+cd opencv-4.4.0/
+
+5. Create directory:
+mkdir build
+cd build
+
+6. Build Opencv using Cmake:
+cmake     -D WITH_CUDA=ON \
+        -D CUDA_ARCH_BIN=&quot;5.3&quot; \
+        -D CUDA_ARCH_PTX=&quot;&quot; \
+        -D ENABLE_PRECOMPILED_HEADERS=OFF \
+        -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib-4.4.0/modules \
+        -D WITH_GSTREAMER=ON \
+        -D WITH_LIBV4L=ON \
+        -D BUILD_opencv_python2=ON \
+        -D BUILD_opencv_python3=ON \
+        -D BUILD_TESTS=OFF \
+        -D BUILD_PERF_TESTS=OFF \
+        -D BUILD_EXAMPLES=OFF \
+        -D CMAKE_BUILD_TYPE=RELEASE \
+        -D CMAKE_INSTALL_PREFIX=/usr/local ..
+
+
+7. Compile the OpenCV with Contribs Modules:
+(4 Hours ~)
+make -j4
+sudo make install
+
+8. Check the OpenCV Version on Terminal:
+python3 -c &apos;import cv2; print(cv2.__version__)&apos;
+
+# References
+# OpenCV configuration options reference: https://docs.opencv.org/4.5.1/db/d05/tutorial_config_reference.html
+# OpenCV modules: https://docs.opencv.org/4.4.0/
+===========================================================================================================
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;jetpack-설치&quot;&gt;JetPack 설치&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Host 환경 구성
+    &lt;ul&gt;
+      &lt;li&gt;Ubuntu 18.04 (VM) 준비
+        &lt;ul&gt;
+          &lt;li&gt;디스크 100 GB 이상 확보&lt;/li&gt;
+          &lt;li&gt;sudo apt update&lt;/li&gt;
+          &lt;li&gt;sudo apt upgrade&lt;/li&gt;
+          &lt;li&gt;sudo apt install openssh-server&lt;/li&gt;
+          &lt;li&gt;sudo apt install ./sdkmanager_[version]-[build#]_amd64.deb (sdkmanager_1.8.1-10392_amd64.deb 미리 준비)&lt;/li&gt;
+          &lt;li&gt;sdkmanager&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;SDK Manager를 이용해 Jetson Nano 이미지 빌드 및 설치&lt;/li&gt;
+&lt;/ol&gt;
+
+</description>
+        <pubDate>Fri, 23 Sep 2022 19:20:05 +0900</pubDate>
+        <link>/embedded/2022/09/23/Jetson-nano.html</link>
+        <guid isPermaLink="true">/embedded/2022/09/23/Jetson-nano.html</guid>
+        
+        <category>embedded</category>
+        
+        
+        <category>embedded</category>
+        
+      </item>
+    
+      <item>
+        <title>Memo</title>
+        <description>&lt;h4 id=&quot;cudacompute-unified-device-architecture&quot;&gt;Cuda(Compute Unified Device Architecture)&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;NVIDIA가 만든 병렬 컴퓨팅 플랫폼 및 API 모델로, 보통 ‘쿠다’라고 발음한다.&lt;/li&gt;
+  &lt;li&gt;CUDA 플랫폼은 GPU 의 가상 명령어셋을 사용할 수 있도록 만들어주는 소프트웨어 레이어이며, NVIDIA가 만든 CUDA 코어가 장착된 GPU에서 작동한다.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;하드웨어별-정보처리-성능-순서&quot;&gt;하드웨어별 정보처리 성능 순서&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;CPU, MPU &amp;lt; MCU &amp;lt; GPU &amp;lt; FPGA &amp;lt; ASIC, TPU&lt;/li&gt;
+  &lt;li&gt;Jetson Nano는 맥스웰 GPU 128코어 내장&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;우분투-apt-get-update-install-에러-failed-to-fetch--&quot;&gt;우분투 apt-get update install 에러 (Failed to fetch … )&lt;/h4&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;    $sudo rm -rf /var/lib/apt/lists/* -vf    
+    $sudo apt-get update
+    $sudo apt-get install ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;asdf&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;pandas&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pd&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;test&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;asdf&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &amp;lt;a href=&quot;&quot;&amp;gt;Hello World&amp;lt;/a&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+</description>
+        <pubDate>Wed, 01 Jan 2020 19:20:05 +0900</pubDate>
+        <link>/etc/2020/01/01/Memo.html</link>
+        <guid isPermaLink="true">/etc/2020/01/01/Memo.html</guid>
+        
+        <category>development</category>
+        
+        
+        <category>Etc</category>
+        
+      </item>
+    
+      <item>
+        <title>Tom is designing the new site</title>
+        <description>&lt;p&gt;Et sed ut quo maiores praesentium consequatur ipsum fuga aliquid corporis vel. exercitationem saepe vel aut consectetur vitae sed. necessitatibus est voluptatem nihil officiis nam debitis et perferendis exercitationem animi qui impedit modi recusandae. sapiente molestiae excepturi maxime. eum sequi nisi et itaque sunt nesciunt nulla vel sit ratione animi&lt;/p&gt;
+
+&lt;p&gt;Deleniti laboriosam soluta animi non corrupti. labore est quasi omnis ducimus. facere pariatur molestiae eum vel dignissimos debitis quam et id&lt;/p&gt;
+
+&lt;p&gt;Esse labore voluptate &lt;a href=&quot;#&quot;&gt;nam dolorum veniam&lt;/a&gt; numquam et reiciendis qui itaque voluptas odit dicta et. est ullam et omnis repellat qui aliquam delectus quod aperiam quam tenetur odit illo voluptatem. optio tenetur occaecati autem vel occaecati voluptas iste sunt libero quo est ex eum. aut molestiae ea est inventore aut quia ab voluptatem hic iste&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;“Provident nihil sint ducimus quasi dignissimos vero esse quisquam Asperiores beatae facere eos corrupti ut autem natus quis cumque dolor.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;this-is-a-sub-heading&quot;&gt;This is a sub-heading&lt;/h4&gt;
+
+&lt;p&gt;Aut ea rem repudiandae tempore perferendis. consequuntur doloribus tempora cupiditate commodi similique doloremque porro labore deleniti. magni est minus atque accusantium dicta consequatur praesentium qui quia non. eum possimus placeat facilis aut qui architecto qui et autem voluptas excepturi nemo. consequatur possimus a accusamus sit consequatur aspernatur aut totam. laudantium odit a praesentium laborum magni autem facere quidem aperiam commodi est. dolore debitis doloremque ea impedit&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Tempora commodi quia deserunt porro excepturi&lt;/li&gt;
+  &lt;li&gt;Placeat in quae tempore pariatur sit aut qui nemo&lt;/li&gt;
+  &lt;li&gt;Rem quod sequi nobis possimus sequi dolorem est ab&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;this-is-a-small-title&quot;&gt;This is a small title&lt;/h5&gt;
+
+&lt;p&gt;Dolorem laudantium possimus esse tenetur voluptates nam. corrupti pariatur commodi est omnis excepturi dignissimos. commodi qui cum tempora ipsa porro quasi quis labore ea cum quod sapiente debitis asperiores. ut qui est ipsa enim numquam odit mollitia. velit earum unde qui animi quod earum repellendus facere aperiam nemo. ipsa praesentium aut quam aperiam qui voluptate&lt;/p&gt;
+</description>
+        <pubDate>Wed, 06 May 2015 19:20:05 +0900</pubDate>
+        <link>/design/2015/05/06/tom-is-designing-the-new-site.html</link>
+        <guid isPermaLink="true">/design/2015/05/06/tom-is-designing-the-new-site.html</guid>
+        
+        
+        <category>design</category>
+        
+      </item>
+    
+      <item>
+        <title>Make some sketches</title>
+        <description>
+</description>
+        <pubDate>Mon, 04 May 2015 19:20:05 +0900</pubDate>
+        <link>/logo%20design/tricks%20and%20tips/2015/05/04/make-some-sketches.html</link>
+        <guid isPermaLink="true">/logo%20design/tricks%20and%20tips/2015/05/04/make-some-sketches.html</guid>
+        
+        <category>design</category>
+        
+        <category>photography</category>
+        
+        
+        <category>Logo Design</category>
+        
+        <category>Tricks and Tips</category>
+        
+      </item>
+    
+      <item>
+        <title>Look what we have done</title>
+        <description>
+</description>
+        <pubDate>Sun, 03 May 2015 19:20:05 +0900</pubDate>
+        <link>/illustrations/photography/2015/05/03/look-what-we-have-done.html</link>
+        <guid isPermaLink="true">/illustrations/photography/2015/05/03/look-what-we-have-done.html</guid>
+        
+        <category>news</category>
+        
+        
+        <category>Illustrations</category>
+        
+        <category>Photography</category>
+        
+      </item>
+    
+      <item>
+        <title>A post without image</title>
+        <description>
+</description>
+        <pubDate>Sun, 03 May 2015 16:20:05 +0900</pubDate>
+        <link>/web%20design/web%20development/2015/05/03/a-post-without-image.html</link>
+        <guid isPermaLink="true">/web%20design/web%20development/2015/05/03/a-post-without-image.html</guid>
+        
+        <category>javascript</category>
+        
+        
+        <category>Web Design</category>
+        
+        <category>Web Development</category>
+        
+      </item>
+    
+      <item>
+        <title>Welcome to Jekyll!</title>
+        <description>&lt;p&gt;You’ll find this post in your &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;jekyll serve&lt;/code&gt;, which launches a web server and auto-regenerates your site when a file is updated.&lt;/p&gt;
+
+&lt;p&gt;To add new posts, simply add a file in the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;_posts&lt;/code&gt; directory that follows the convention &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;YYYY-MM-DD-name-of-post.ext&lt;/code&gt; and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.&lt;/p&gt;
+
+&lt;p&gt;Jekyll also offers powerful support for code snippets:&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ruby&quot; data-lang=&quot;ruby&quot;&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hi, &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;print_hi&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;Tom&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#=&amp;gt; prints &apos;Hi, Tom&apos; to STDOUT.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;Check out the &lt;a href=&quot;http://jekyllrb.com&quot;&gt;Jekyll docs&lt;/a&gt; for more info on how to get the most out of Jekyll. File all bugs/feature requests at &lt;a href=&quot;https://github.com/jekyll/jekyll&quot;&gt;Jekyll’s GitHub repo&lt;/a&gt;. If you have questions, you can ask them on &lt;a href=&quot;https://github.com/jekyll/jekyll-help&quot;&gt;Jekyll’s dedicated Help repository&lt;/a&gt;.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 02 May 2015 19:20:05 +0900</pubDate>
+        <link>/jekyll/update/2015/05/02/welcome-to-jekyll.html</link>
+        <guid isPermaLink="true">/jekyll/update/2015/05/02/welcome-to-jekyll.html</guid>
+        
+        <category>logo</category>
+        
+        <category>development</category>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+  </channel>
+</rss>
